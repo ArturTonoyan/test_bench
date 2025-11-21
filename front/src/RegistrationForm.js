@@ -1,8 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import "./RegistrationForm.scss";
+import puk from "./puk.mp3";
+
+// Создаем аудио контекст для воспроизведения звука
+const useAudio = () => {
+  const audioRef = useRef(null);
+
+  const playFartSound = () => {
+    try {
+      // Создаем Data URL для более громкого звука пука
+      const fartSound = new Audio(puk);
+      fartSound.volume = 0.7; // Увеличиваем громкость до 70%
+      fartSound.play().catch((e) => console.log("Звук не воспроизведен:", e));
+    } catch (error) {
+      console.log("Ошибка воспроизведения звука:", error);
+    }
+  };
+
+  return playFartSound;
+};
 
 const RegistrationForm = () => {
   const navigate = useNavigate();
@@ -19,6 +38,7 @@ const RegistrationForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
   const [poopAnimations, setPoopAnimations] = useState([]);
+  const playFartSound = useAudio();
 
   // Validation functions
   const validateFirstName = (value) => {
@@ -155,6 +175,9 @@ const RegistrationForm = () => {
     // Получаем позицию заголовка
     const headerRect = header.getBoundingClientRect();
     const headerTop = headerRect.top + window.scrollY;
+
+    // Воспроизводим звук пука
+    playFartSound();
 
     // Создаем новую анимацию какашки
     const newPoop = {
