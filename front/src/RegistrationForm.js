@@ -58,9 +58,7 @@ const RegistrationForm = () => {
   // Validation functions
   const validateFirstName = (value) => {
     if (!value) return "Поле Имя не может быть пустым!";
-    if (value.length > 30) return "Поле Имя максимум 30 символов!";
-    if (!/^[а-яА-ЯёЁ\s-]+$/.test(value))
-      return "Поле Имя имеет недопустимые символы!";
+    if (value.length > 40) return "Поле Имя максимум 30 символов!";
     return "";
   };
 
