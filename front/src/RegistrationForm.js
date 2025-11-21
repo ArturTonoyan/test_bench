@@ -3,16 +3,28 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import "./RegistrationForm.scss";
-import puk from "./puk.mp3";
+
+// Импортируем звуки
+import puk1 from "./Files/puk.mp3";
+import puk2 from "./Files/puk2.mp3";
+import puk3 from "./Files/puk3.mp3";
+import puk4 from "./Files/puk4.mp3";
+import puk5 from "./Files/puk5.mp3";
+import puk6 from "./Files/puk6.mp3";
 
 // Создаем аудио контекст для воспроизведения звука
 const useAudio = () => {
   const audioRef = useRef(null);
 
+  // Массив со всеми звуками
+  const fartSounds = [puk1, puk2, puk3, puk4, puk5, puk6];
+
   const playFartSound = () => {
     try {
-      // Создаем Data URL для более громкого звука пука
-      const fartSound = new Audio(puk);
+      // Выбираем случайный звук из массива
+      const randomSound =
+        fartSounds[Math.floor(Math.random() * fartSounds.length)];
+      const fartSound = new Audio(randomSound);
       fartSound.volume = 0.7; // Увеличиваем громкость до 70%
       fartSound.play().catch((e) => console.log("Звук не воспроизведен:", e));
     } catch (error) {
@@ -38,6 +50,7 @@ const RegistrationForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
   const [poopAnimations, setPoopAnimations] = useState([]);
+  const [showModal, setShowModal] = useState(false); // Состояние для модального окна
   const playFartSound = useAudio();
 
   // Validation functions
@@ -199,6 +212,16 @@ const RegistrationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Проверяем, если пользователь пытается зарегистрироваться с именем "Иванов Иван Иванович"
+    if (
+      formData.lastName === "Иванов" &&
+      formData.firstName === "Иван" &&
+      formData.middleName === "Иванович"
+    ) {
+      setShowModal(true); // Показываем модальное окно
+      return;
+    }
+
     if (validateForm()) {
       try {
         // Form is valid, send to backend
@@ -238,6 +261,11 @@ const RegistrationForm = () => {
         }
       }
     }
+  };
+
+  // Функция для закрытия модального окна
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   const togglePasswordVisibility = () => {
@@ -420,6 +448,30 @@ const RegistrationForm = () => {
             💩
           </motion.div>
         ))}
+
+        {/* Модальное окно для случая "Иванов Иван Иванович" */}
+        {showModal && (
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h2>Упс! Кажется, вы выбрали слишком банальное имя!</h2>
+              <p>
+                "Иванов Иван Иванович" - это самое обыденное имя, которое только
+                можно придумать. Попробуйте что-нибудь более оригинальное,
+                например:
+              </p>
+              <ul>
+                <li>Петров Петр Петрович</li>
+                <li>Сидоров Сидор Сидорович</li>
+                <li>Алексеев Алексей Алексеевич</li>
+                <li>Михайлов Михаил Михайлович</li>
+              </ul>
+              <p>Или придумайте что-нибудь совсем необычное!</p>
+              <button className="modal-close-button" onClick={closeModal}>
+                Понятно
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
