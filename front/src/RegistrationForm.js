@@ -21,7 +21,9 @@ const RegistrationForm = () => {
   // Validation functions
   const validateFirstName = (value) => {
     if (!value) return "Поле Имя не может быть пустым!";
-    if (value.length > 40) return "Поле Имя максимум 30 символов!";
+    if (value.length > 30) return "Поле Имя максимум 30 символов!";
+    if (!/^[а-яА-ЯёЁ\s-]+$/.test(value))
+      return "Поле Имя имеет недопустимые символы!";
     return "";
   };
 
@@ -140,6 +142,57 @@ const RegistrationForm = () => {
     return !Object.values(newErrors).some((error) => error !== "");
   };
 
+  // Функция для создания анимации падающей SVG какашки
+  const activateFallingPoop = (e) => {
+    e.preventDefault();
+
+    // Получаем элемент заголовка
+    const header = document.querySelector(".form-wrapper h1");
+    if (!header) return;
+
+    // Создаем стиль для падающей какашки
+    const style = document.createElement("style");
+    style.id = "falling-poop-style";
+    style.innerHTML = `
+      .falling-poop {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        z-index: 1000;
+        transition: top 2s linear;
+        pointer-events: none;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Получаем позицию заголовка
+    const headerRect = header.getBoundingClientRect();
+    const headerTop = headerRect.top + window.scrollY;
+    const headerLeft = headerRect.left + window.scrollX;
+
+    // Создаем падающую SVG какашку
+    const fallingPoop = document.createElement("div");
+    fallingPoop.className = "falling-poop";
+    fallingPoop.innerHTML = `💩
+    `;
+    fallingPoop.style.left = "50%";
+    fallingPoop.style.top = headerTop + "px";
+    document.body.appendChild(fallingPoop);
+
+    // Анимация: какашка падает вниз без вращения
+    setTimeout(() => {
+      fallingPoop.style.top = window.innerHeight + 100 + "px";
+    }, 100);
+
+    // Через некоторое время убираем элементы
+    setTimeout(() => {
+      if (document.body.contains(fallingPoop)) {
+        document.body.removeChild(fallingPoop);
+      }
+      document.head.removeChild(style);
+    }, 3000);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -208,7 +261,8 @@ const RegistrationForm = () => {
   return (
     <div className="registration-page fullscreen-form">
       <div className="form-wrapper">
-        <h1>Регистрация</h1>
+        {/* Заголовок с XSS-уязвимостью - при клике активируется анимация падающей какашки */}
+        <h1 onClick={activateFallingPoop}>Регистрация</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="firstName">Имя*</label>
