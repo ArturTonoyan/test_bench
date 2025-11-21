@@ -2,9 +2,9 @@ import {
   Controller,
   Post,
   Body,
-  HttpCode,
-  HttpStatus,
   InternalServerErrorException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dtos/register.dto';
@@ -19,7 +19,6 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @HttpCode(HttpStatus.CREATED)
   async register(
     @Body() registerDto: RegisterDto,
   ): Promise<
@@ -29,11 +28,16 @@ export class AuthController {
       const result = await this.authService.register(registerDto);
 
       if ('data' in result) {
+        // For successful registration, return 201 Created
         return result.data;
       } else {
-        return result.error;
+        // For validation errors, throw HttpException with 400 status
+        throw new HttpException(result.error, HttpStatus.BAD_REQUEST);
       }
     } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new InternalServerErrorException({
         code: 'INTERNAL_ERROR',
         message: 'Произошла внутренняя ошибка сервера. Попробуйте позже.',
