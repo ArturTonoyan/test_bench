@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 import "./RegistrationForm.scss";
 
 const RegistrationForm = () => {
@@ -17,6 +18,7 @@ const RegistrationForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [poopAnimations, setPoopAnimations] = useState([]);
 
   // Validation functions
   const validateFirstName = (value) => {
@@ -142,7 +144,7 @@ const RegistrationForm = () => {
     return !Object.values(newErrors).some((error) => error !== "");
   };
 
-  // Функция для создания анимации падающей SVG какашки
+  // Функция для создания анимации падающей какашки с помощью framer-motion
   const activateFallingPoop = (e) => {
     e.preventDefault();
 
@@ -150,46 +152,24 @@ const RegistrationForm = () => {
     const header = document.querySelector(".form-wrapper h1");
     if (!header) return;
 
-    // Создаем стиль для падающей какашки
-    const style = document.createElement("style");
-    style.id = "falling-poop-style";
-    style.innerHTML = `
-      .falling-poop {
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        z-index: 1000;
-        transition: top 2s linear;
-        pointer-events: none;
-      }
-    `;
-    document.head.appendChild(style);
-
     // Получаем позицию заголовка
     const headerRect = header.getBoundingClientRect();
     const headerTop = headerRect.top + window.scrollY;
-    const headerLeft = headerRect.left + window.scrollX;
 
-    // Создаем падающую SVG какашку
-    const fallingPoop = document.createElement("div");
-    fallingPoop.className = "falling-poop";
-    fallingPoop.innerHTML = `💩
-    `;
-    fallingPoop.style.left = "50%";
-    fallingPoop.style.top = headerTop + "px";
-    document.body.appendChild(fallingPoop);
+    // Создаем новую анимацию какашки
+    const newPoop = {
+      id: Date.now() + Math.random(), // Уникальный ID для каждой какашки
+      startPosition: headerTop,
+    };
 
-    // Анимация: какашка падает вниз без вращения
+    // Добавляем новую какашку в состояние
+    setPoopAnimations((prev) => [...prev, newPoop]);
+
+    // Удаляем какашку через 3 секунды
     setTimeout(() => {
-      fallingPoop.style.top = window.innerHeight + 100 + "px";
-    }, 100);
-
-    // Через некоторое время убираем элементы
-    setTimeout(() => {
-      if (document.body.contains(fallingPoop)) {
-        document.body.removeChild(fallingPoop);
-      }
-      document.head.removeChild(style);
+      setPoopAnimations((prev) =>
+        prev.filter((poop) => poop.id !== newPoop.id)
+      );
     }, 3000);
   };
 
@@ -388,6 +368,35 @@ const RegistrationForm = () => {
             Зарегистрироваться
           </button>
         </form>
+
+        {/* Анимации падающих какашек с помощью framer-motion */}
+        {poopAnimations.map((poop) => (
+          <motion.div
+            key={poop.id}
+            initial={{
+              top: poop.startPosition,
+              left: "50%",
+              x: "-50%",
+              opacity: 1,
+            }}
+            animate={{
+              top: window.innerHeight + 100,
+              opacity: [1, 1, 0.8, 0.6, 0.4, 0.2, 0],
+            }}
+            transition={{
+              duration: 2,
+              ease: "easeIn",
+            }}
+            style={{
+              position: "absolute",
+              fontSize: "50px",
+              zIndex: 1000,
+              pointerEvents: "none",
+            }}
+          >
+            💩
+          </motion.div>
+        ))}
       </div>
     </div>
   );
