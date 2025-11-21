@@ -2,10 +2,8 @@ import { IsString, IsOptional, Length, Matches } from 'class-validator';
 
 export class RegisterDto {
   @IsString()
-  @Length(1, 30)
-  @Matches(/^[а-яА-ЯёЁ\s-]+$/, {
-    message: 'Поле Имя имеет недопустимые символы',
-  })
+  @Length(1, 40)
+  // Убираем валидацию, разрешающую только кириллические символы, чтобы создать XSS уязвимость
   firstName: string;
 
   @IsString()
