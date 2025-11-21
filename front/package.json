@@ -17,6 +17,7 @@
     "react-scripts": "5.0.1",
     "sass": "^1.94.2",
     "save-dev": "^0.0.1-security",
+    "three": "^0.181.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

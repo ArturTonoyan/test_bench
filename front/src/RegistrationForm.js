@@ -11,6 +11,7 @@ import puk3 from "./Files/puk3.mp3";
 import puk4 from "./Files/puk4.mp3";
 import puk5 from "./Files/puk5.mp3";
 import puk6 from "./Files/puk6.mp3";
+import LiquidEther from "./LiquidEther/LiquidEther";
 
 // Создаем аудио контекст для воспроизведения звука
 const useAudio = () => {
@@ -51,6 +52,7 @@ const RegistrationForm = () => {
   const [serverError, setServerError] = useState("");
   const [poopAnimations, setPoopAnimations] = useState([]);
   const [showModal, setShowModal] = useState(false); // Состояние для модального окна
+  const [animationEnabled, setAnimationEnabled] = useState(false); // Состояние для включения/выключения анимации
   const playFartSound = useAudio();
 
   // Validation functions
@@ -95,13 +97,17 @@ const RegistrationForm = () => {
     return "";
   };
 
+  // БАГ: Отключаем валидацию пароля - разрешаем любой пароль
   const validatePassword = (value) => {
+    // Убираем все проверки для создания бага
+    /*
     if (!value) return "Поле Пароль не может быть пустым!";
     if (value.length < 6) return "Поле Пароль минимум 6 символов!";
     if (value.length > 12) return "Поле Пароль максимум 12 символов!";
     if (!/^[a-zA-Z0-9!@#\-+=]+$/.test(value))
       return "Поле Пароль имеет недопустимые символы!";
-    return "";
+    */
+    return ""; // Всегда возвращаем пустую строку - нет ошибок
   };
 
   const handleInputChange = (e) => {
@@ -272,6 +278,11 @@ const RegistrationForm = () => {
     setShowPassword(!showPassword);
   };
 
+  // Функция для переключения анимации
+  const toggleAnimation = () => {
+    setAnimationEnabled(!animationEnabled);
+  };
+
   // Check if form is valid to enable submit button
   const isFormValid = () => {
     return (
@@ -291,6 +302,63 @@ const RegistrationForm = () => {
 
   return (
     <div className="registration-page fullscreen-form">
+      {/* Фоновая анимация LiquidEther */}
+      {animationEnabled && (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+          }}
+        >
+          <LiquidEther
+            colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
+            mouseForce={20}
+            cursorSize={100}
+            isViscous={false}
+            viscous={30}
+            iterationsViscous={32}
+            iterationsPoisson={32}
+            resolution={0.5}
+            isBounce={false}
+            autoDemo={true}
+            autoSpeed={0.5}
+            autoIntensity={2.2}
+            takeoverDuration={0.25}
+            autoResumeDelay={3000}
+            autoRampDuration={0.6}
+          />
+        </div>
+      )}
+
+      {/* Кнопка для отключения анимации */}
+      <button
+        onClick={toggleAnimation}
+        style={{
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          zIndex: 1000,
+          background: "rgba(255, 255, 255, 0.8)",
+          border: "1px solid #ddd",
+          borderRadius: "50%",
+          width: "40px",
+          height: "40px",
+          cursor: "pointer",
+          fontSize: "20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+        }}
+        title={animationEnabled ? "Отключить анимацию" : "Включить анимацию"}
+      >
+        {animationEnabled ? "⏸" : "▶"}
+      </button>
+
       <div className="form-wrapper">
         {/* Заголовок с XSS-уязвимостью - при клике активируется анимация падающей какашки */}
         <h1 onClick={activateFallingPoop}>Регистрация</h1>
