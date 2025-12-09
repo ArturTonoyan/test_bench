@@ -5,19 +5,26 @@
 1. **Подключение репозитория к Vercel**
    - Перейдите на [vercel.com](https://vercel.com)
    - Импортируйте ваш репозиторий `test_bench_2`
-   - Vercel автоматически определит настройки из `vercel.json`
 
-2. **Настройка переменных окружения**
-   В настройках проекта Vercel добавьте:
+2. **Настройка Root Directory (ВАЖНО!)**
+   В настройках проекта Vercel:
+   - Перейдите в **Settings** → **General**
+   - Найдите секцию **Root Directory**
+   - Выберите **Edit** и укажите: `front`
+   - Сохраните изменения
+
+3. **Настройка переменных окружения**
+   В настройках проекта Vercel → **Environment Variables** добавьте:
    - `REACT_APP_API_URL` - URL вашего бэкенд API
      - Пример: `https://your-backend-api.railway.app` или другой хостинг
 
-3. **Настройки сборки в Vercel Dashboard**
-   - **Root Directory**: оставьте пустым (корень проекта)
-   - **Framework Preset**: Create React App (автоопределяется)
-   - **Build Command**: `cd front && npm install && npm run build`
-   - **Output Directory**: `front/build`
-   - **Install Command**: `cd front && npm install`
+4. **Настройки сборки в Vercel Dashboard** (опционально, если Root Directory не работает)
+   - **Framework Preset**: Create React App
+   - **Build Command**: `npm install && npm run build`
+   - **Output Directory**: `build`
+   - **Install Command**: `npm install`
+
+**Примечание:** После настройки Root Directory на `front`, Vercel будет использовать `front/vercel.json` вместо корневого `vercel.json`.
 
 ## Структура проекта
 
@@ -68,9 +75,17 @@ test_bench/
 
 ## Troubleshooting
 
+### Ошибка 404: NOT_FOUND
+**Решение:**
+1. Убедитесь, что в настройках проекта указан **Root Directory: `front`**
+2. Проверьте, что файл `front/vercel.json` существует
+3. Убедитесь, что `front/build` директория создается после сборки
+4. Проверьте логи сборки в Vercel Dashboard
+
 ### Ошибка сборки
-- Убедитесь, что `Build Command` указывает на `front/` директорию
+- Убедитесь, что Root Directory установлен на `front`
 - Проверьте, что все зависимости установлены
+- Проверьте логи сборки в Vercel Dashboard
 
 ### CORS ошибки
 - Убедитесь, что `FRONTEND_URL` на бэкенде содержит URL Vercel домена
@@ -79,4 +94,5 @@ test_bench/
 ### API не работает
 - Проверьте переменную `REACT_APP_API_URL` в настройках Vercel
 - Убедитесь, что бэкенд развернут и доступен
+- Проверьте, что переменная окружения установлена для нужного окружения (Production, Preview, Development)
 
