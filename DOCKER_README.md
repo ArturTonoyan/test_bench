@@ -6,14 +6,22 @@
 
 ## Быстрый старт
 
-1. **Соберите и запустите контейнеры:**
+1. **Создайте файл `.env` в корне проекта:**
+   ```env
+   FRONTEND_URL=http://localhost:80
+   REACT_APP_API_URL=http://localhost:3001
+   ```
+
+2. **Соберите и запустите контейнеры:**
    ```bash
    docker-compose up -d --build
    ```
 
-2. **Приложение будет доступно:**
+3. **Приложение будет доступно:**
    - Frontend: http://localhost
    - Backend API: http://localhost:3001
+
+**Важно:** Без файла `.env` приложение может не работать корректно, так как переменные окружения обязательны.
 
 ## Команды управления
 
@@ -44,20 +52,35 @@ docker-compose up -d --build
 docker-compose down -v
 ```
 
+## Настройка переменных окружения
+
+**Обязательно** создайте файл `.env` в корне проекта:
+
+```env
+# Frontend URL for CORS (comma-separated for multiple origins)
+# URL, который будет виден в браузере пользователя
+FRONTEND_URL=http://localhost:80
+
+# React App API URL
+# URL бэкенд API, доступный из браузера пользователя
+REACT_APP_API_URL=http://localhost:3001
+```
+
+**Важно:** 
+- `FRONTEND_URL` - это URL фронтенда для настройки CORS на бэкенде (должен быть доступен из браузера)
+- `REACT_APP_API_URL` - это URL бэкенда, который будет использоваться в React приложении (должен быть доступен из браузера)
+- Для продакшена замените `localhost` на ваши реальные домены
+
 ## Настройка для продакшена
 
-Для развертывания на сервере измените переменные окружения в `docker-compose.yml`:
+Для развертывания на сервере создайте файл `.env` с вашими доменами:
 
-```yaml
-environment:
-  - FRONTEND_URL=http://your-domain.com
+```env
+FRONTEND_URL=https://your-domain.com
+REACT_APP_API_URL=https://api.your-domain.com
 ```
 
-И в секции build frontend:
-```yaml
-args:
-  - REACT_APP_API_URL=http://your-domain.com:3001
-```
+Или измените переменные окружения в `docker-compose.yml` напрямую.
 
 ## Структура
 

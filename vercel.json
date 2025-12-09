@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "buildCommand": "cd front && npm install && npm run build",
+  "outputDirectory": "front/build",
+  "installCommand": "cd front && npm install",
+  "framework": "create-react-app",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+

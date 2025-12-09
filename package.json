@@ -1,0 +1,24 @@
+{
+  "name": "test-bench",
+  "version": "1.0.0",
+  "description": "Test Bench - Full-stack application",
+  "private": true,
+  "workspaces": [
+    "front",
+    "back"
+  ],
+  "scripts": {
+    "install:front": "cd front && npm install",
+    "install:back": "cd back && npm install",
+    "install:all": "npm run install:front && npm run install:back",
+    "build:front": "cd front && npm run build",
+    "build:back": "cd back && npm run build",
+    "start:front": "cd front && npm start",
+    "start:back": "cd back && npm run start:dev"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
+

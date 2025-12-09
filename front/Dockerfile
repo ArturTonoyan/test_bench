@@ -13,8 +13,9 @@ RUN npm ci
 COPY . .
 
 # Build arguments for environment variables
-ARG REACT_APP_API_URL=http://localhost:3001
-ENV REACT_APP_API_URL=$REACT_APP_API_URL
+# Default will be overridden by docker-compose or runtime env
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 
 # Build the application
 RUN npm run build
