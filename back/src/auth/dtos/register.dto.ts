@@ -68,10 +68,9 @@ export class RegisterDto {
     description: 'Пароль пользователя',
     example: 'password123',
     minLength: 4,
-    maxLength: 12,
   })
   @IsString()
-  @Length(4, 12) // БАГ 7: Минимум 4 символа вместо 6
+  @Length(4) // БАГ 7: Минимум 4 символа вместо 6, убрали максимум для бага 500 ошибки
   // БАГ 7: Убрали проверку на допустимые символы - разрешаем все спец. символы
   password: string;
 }
