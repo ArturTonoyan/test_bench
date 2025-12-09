@@ -22,6 +22,14 @@ export class AuthService {
     | { success: false; error: RegisterErrorResponse }
   > {
     try {
+      // БАГ 11: 500 ошибка при отправке пароля более 12 символов
+      if (registerDto.password && registerDto.password.length > 12) {
+        throw new InternalServerErrorException({
+          code: 'INTERNAL_ERROR',
+          message: 'Произошла внутренняя ошибка сервера. Попробуйте позже.',
+        });
+      }
+
       // Check if email or phone already exists
       const existingUser = this.users.find(
         (user) =>
@@ -75,6 +83,9 @@ export class AuthService {
         },
       };
     } catch (error) {
+      if (error instanceof InternalServerErrorException) {
+        throw error;
+      }
       throw new InternalServerErrorException({
         code: 'INTERNAL_ERROR',
         message: 'Произошла внутренняя ошибка сервера. Попробуйте позже.',

@@ -15,11 +15,14 @@ async function bootstrap() {
   );
 
   // Enable CORS for frontend communication
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   app.enableCors({
-    origin: 'http://localhost:3000', // Frontend URL
+    origin: frontendUrl,
     credentials: true,
   });
 
-  await app.listen(3001); // Backend will run on port 3001
+  const port = process.env.PORT || 3001;
+  await app.listen(port);
+  console.log(`Application is running on: http://0.0.0.0:${port}`);
 }
 bootstrap();

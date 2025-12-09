@@ -72,12 +72,13 @@ const WelcomePage = () => {
   return (
     <div className="registration-page welcome-fullscreen">
       <div className="welcome-wrapper">
-        {/* Уязвимость XSS: отображаем имя пользователя без экранирования */}
+        {/* БАГ 8-9: XSS уязвимость - отображаем имя пользователя без экранирования */}
         <h2
           dangerouslySetInnerHTML={{
             __html: `Привет, ${userData?.firstName || "Гость"}!`,
           }}
         ></h2>
+        {/* БАГ 8: Можно ввести <script>alert('XSS')</script> в поле имени для тестирования */}
         <p>В этом окне баги искать не надо ;)</p>
         {/* Кнопка с XSS-уязвимостью, которая активирует "кражу" курсора */}
         <button
