@@ -49,6 +49,11 @@ async function bootstrap() {
         return callback(null, true);
       }
       
+      // Allow localhost for Docker development
+      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+      
       // If no FRONTEND_URL is set, allow all origins (development mode)
       if (allowedOrigins.length === 0) {
         return callback(null, true);

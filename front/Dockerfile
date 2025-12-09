@@ -14,7 +14,7 @@ COPY . .
 
 # Build arguments for environment variables
 # Default will be overridden by docker-compose or runtime env
-ARG REACT_APP_API_URL
+ARG REACT_APP_API_URL=http://localhost:3001
 ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 
 # Build the application

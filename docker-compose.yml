@@ -10,7 +10,7 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
-      - FRONTEND_URL=${FRONTEND_URL}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:80}
     restart: unless-stopped
     networks:
       - app-network
@@ -20,12 +20,12 @@ services:
       context: ./front
       dockerfile: Dockerfile
       args:
-        - REACT_APP_API_URL=${REACT_APP_API_URL}
+        - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:3001}
     container_name: test_bench_frontend
     ports:
       - "80:80"
     environment:
-      - REACT_APP_API_URL=${REACT_APP_API_URL}
+      - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:3001}
     depends_on:
       - backend
     restart: unless-stopped

@@ -1,13 +1,18 @@
 {
   "version": 2,
-  "buildCommand": "cd front && npm ci && npm run build",
-  "outputDirectory": "front/build",
-  "installCommand": "cd front && npm ci",
-  "framework": null,
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "front/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
